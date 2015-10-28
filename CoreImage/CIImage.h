@@ -7,6 +7,9 @@
 #import <CoreImage/CoreImageDefines.h>
 #import <CoreVideo/CoreVideo.h>
 
+/*
+	图片（CIImage）： 代表一个图像，可代表关联后输出的图像。
+ */
 @class NSData, NSURL, NSDictionary;
 
 @class CIContext, CIFilter, CIFilterShape, CIColor;
@@ -20,7 +23,9 @@ CORE_IMAGE_CLASS_EXPORT
 	void *_priv;
 }
 
-/* Pixel formats. */
+/*
+	像素格式
+ */
 
 typedef int CIFormat;
 
@@ -36,30 +41,34 @@ CORE_IMAGE_EXPORT CIFormat kCIFormatRGBAh __OSX_AVAILABLE_STARTING(__MAC_10_4, _
 
 /* Image dictionary keys. */
 
-/* A CGColorSpaceRef defining the color space of the image. This value 
- * overrides the image's implicit color space. 
- * If [NSNull null] then dont color manage the image. */
+/*
+	图片属性字典里面的 KEYS
+ */
+
+ //颜色空间  CGColorSpaceRef || [NSNull null]
 CORE_IMAGE_EXPORT NSString *kCIImageColorSpace;
 
-/* A NSDictionary of metadata properties to pass to CIImage initialization methods.
- * When used with imageWithCGImage:options:, initWithCGImage:options:, imageWithData:options:, initWithData:options:
- *   If this option is not specified, the properties will be set to CGImageSourceCopyPropertiesAtIndex.
- *   If this option is [NSNull null], the properties will be set to nil.
+/*
+	图片属性：imageWithCGImage:options:, initWithCGImage:options:, imageWithData:options:, initWithData:options:
+	如果不设置，则properties自动设置成CGImageSourceCopyPropertiesAtIndex
+	如果设置成[NSNull null]，properties清空
  */
 CORE_IMAGE_EXPORT NSString *kCIImageProperties __OSX_AVAILABLE_STARTING(__MAC_10_8, __IPHONE_5_0);
 
-/* Creates a new image from the contents of 'image'. */
+//从 Image创建CIImage
 + (CIImage *)imageWithCGImage:(CGImageRef)image;
 + (CIImage *)imageWithCGImage:(CGImageRef)image options:(NSDictionary *)d;
 
-/* Creates a new image from the contents of 'layer'. */
+//从layer创建CIImage
 + (CIImage *)imageWithCGLayer:(CGLayerRef)layer __OSX_AVAILABLE_STARTING(__MAC_10_4, __IPHONE_NA);
 + (CIImage *)imageWithCGLayer:(CGLayerRef)layer options:(NSDictionary *)d __OSX_AVAILABLE_STARTING(__MAC_10_4, __IPHONE_NA);
 
-/* Creates a new image whose bitmap data is from 'd'. Each row contains 'bpr'
- * bytes. The dimensions of the image are defined by 'size'. 'f' defines
- * the format and size of each pixel. 'cs' defines the color space
- * that the image is defined in, if nil, the image is not color matched. */
+ //创建一个新图像。
+ //data:bitmap位图数据
+ //bpr:bitmap位图数据大小
+ //size:图片的Size
+ //format：像素格式
+ //colorSpace:颜色空间
 + (CIImage *)imageWithBitmapData:(NSData *)d bytesPerRow:(size_t)bpr
  size:(CGSize)size format:(CIFormat)f colorSpace:(CGColorSpaceRef)cs;
 
@@ -71,9 +80,11 @@ CORE_IMAGE_EXPORT NSString *kCIImageProperties __OSX_AVAILABLE_STARTING(__MAC_10
 + (CIImage *)imageWithTexture:(unsigned int)name size:(CGSize)size
  flipped:(BOOL)flag colorSpace:(CGColorSpaceRef)cs __OSX_AVAILABLE_STARTING(__MAC_10_4, __IPHONE_6_0);
 
+//从文件里面创建一个新图像
 + (CIImage *)imageWithContentsOfURL:(NSURL *)url;
 + (CIImage *)imageWithContentsOfURL:(NSURL *)url options:(NSDictionary *)d;
 
+//从二进制创建一个新图像
 + (CIImage *)imageWithData:(NSData *)data;
 + (CIImage *)imageWithData:(NSData *)data options:(NSDictionary *)d;
 
